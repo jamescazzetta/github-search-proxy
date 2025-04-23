@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "name": "github-search-proxy",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --experimental-json-modules index.js",
     "lint": "eslint . --fix",
     "format": "prettier --write ."
   },

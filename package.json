@@ -1,0 +1,12 @@
+{
+  "version": "0.0.0",
+  "main": "index.js",
+  "name": "github-search-proxy",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "express": "^4.19.2"
+  }
+}

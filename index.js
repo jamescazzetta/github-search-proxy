@@ -1,12 +1,14 @@
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json' assert { type: "json" };
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 const PATH_SEARCH_USERS = 'https://api.github.com/search/users';
 const BASE_PATH_USERS = 'https://api.github.com/users';
 
-// @todo: add swagger docs maybe
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /**
  * Fetch users from Github based on search query

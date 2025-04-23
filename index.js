@@ -8,6 +8,11 @@ const PORT = process.env.PORT || 8000;
 const PATH_SEARCH_USERS = 'https://api.github.com/search/users';
 const BASE_PATH_USERS = 'https://api.github.com/users';
 
+const MAX_USERS = 5;
+const MAX_REPOS = 5;
+const CACHE_CONTROL = 'public, max-age=300'; // cache responses for 5 minutes
+
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /**
@@ -16,11 +21,14 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
  * @returns {Promise<Array>} - list of Github users
  */
 async function fetchGithubUsers(query) {
-  const response = await fetch(`${PATH_SEARCH_USERS}?q=${encodeURIComponent(query)}`);
+  const response = await fetch(
+    `${PATH_SEARCH_USERS}?q=${encodeURIComponent(query)}`, {
+    headers: { 'Cache-Control': CACHE_CONTROL }
+  });
   if (!response.ok) throw new Error('Github API request failed');
 
   const data = await response.json();
-  return data.items.slice(0, 5);
+  return data.items.slice(0, MAX_USERS);
 }
 
 /**
@@ -29,7 +37,10 @@ async function fetchGithubUsers(query) {
  * @returns {Promise<Array>} - list of (max. 5) Github repositories
  */
 async function fetchUserRepos(username) {
-  const repoResponse = await fetch(`${BASE_PATH_USERS}/${username}/repos?sort=updated&per_page=5`);
+  const repoResponse = await fetch(
+    `${BASE_PATH_USERS}/${username}/repos?sort=updated&per_page=${MAX_REPOS}`, {
+    headers: { 'Cache-Control': CACHE_CONTROL }
+  });
   if (!repoResponse.ok) throw new Error('Failed to fetch user repositories');
 
   return await repoResponse.json();
@@ -52,6 +63,7 @@ app.get('/search', async (req, res) => {
       };
     }));
 
+    res.set('Cache-Control', CACHE_CONTROL);
     res.status(StatusCodes.OK).json(enrichedUsers);
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });

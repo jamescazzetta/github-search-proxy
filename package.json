@@ -1,14 +1,22 @@
 {
   "type": "module",
-  "version": "0.0.0",
   "main": "index.js",
+  "version": "1.0.0",
   "name": "github-search-proxy",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "eslint . --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "express": "^4.19.2",
     "http-status-codes": "^2.3.0",
     "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.2.5"
   }
 }

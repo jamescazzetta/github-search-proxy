@@ -1,4 +1,5 @@
 import express from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -23,7 +24,7 @@ async function fetchGithubUsers(query) {
 /**
  * Fetch recent repositories of a Github user
  * @param {string} username - Github username
- * @returns {Promise<Array>} - list of (max. 5) repositories
+ * @returns {Promise<Array>} - list of (max. 5) Github repositories
  */
 async function fetchUserRepos(username) {
   const repoResponse = await fetch(`${BASE_PATH_USERS}/${username}/repos?sort=updated&per_page=5`);
@@ -49,9 +50,9 @@ app.get('/search', async (req, res) => {
       };
     }));
 
-    res.json(enrichedUsers);
+    res.status(StatusCodes.OK).json(enrichedUsers);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
 });
 
